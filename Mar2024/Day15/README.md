@@ -3,38 +3,54 @@
 
 <hr/>
 
-<h4><a href="https://leetcode.com/problems/binary-subarrays-with-sum/?envType=daily-question&envId=2024-03-14">Problem</a>:Given a binary array nums and an integer goal, return the number of non-empty subarrays with a sum goal.
+<h4><a href="https://leetcode.com/problems/product-of-array-except-self/?envType=daily-question&envId=2024-03-15">Problem</a>:Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
 
-A subarray is a contiguous part of the array.
+The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+
+You must write an algorithm that runs in O(n) time and without using the division operation.
 
 
 
 
 
-<b>Input:</b> nums = [1,0,1,0,1], goal = 2<br>
-<b>Output:</b>4<br>
+<b>Input:</b> nums = [1,2,3,4]<br>
+<b>Output:</b>[24,12,8,6]
+<br>
 
 <hr>
-<b>Approach 1: Using Two pointer approach</b>
+<b>Approach 1: Counting the zeros doing accordingly</b>
 
 <br/>
 
 ```
-    int helper(int x,vector<int>& nums){
-        if(x<0) return 0;
-        int l=0,curr=0,res=0;
-        for(int i=0;i<nums.size();i++){
-            curr+=nums[i];
-            while(curr>x){
-                curr-=nums[l];
-                l++;
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int product=1;
+        int zeroCount=0;
+        for(auto i:nums){
+            if(i==0){
+                zeroCount++;
+                continue;
             }
-            res+=(i-l+1);
+            product*=i;
         }
-        return res;
-    }
-    int numSubarraysWithSum(vector<int>& nums, int goal) {
-        return helper(goal,nums)-helper(goal-1,nums);
+        for(int i=0;i<nums.size();i++){
+            if(nums[i]==0){
+                if(zeroCount-1>0){
+                    nums[i]=0;
+                }
+                else{
+                    nums[i]=product/(nums[i]==0?1:nums[i]);
+                }
+            }
+            else if(zeroCount>0){
+                nums[i]=0;
+            }
+            else{
+                nums[i]=product/(nums[i]==0?1:nums[i]);
+            }
+        }
+        return nums;
+        
     }
 
 ```

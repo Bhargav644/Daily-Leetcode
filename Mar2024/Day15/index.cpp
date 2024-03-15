@@ -1,16 +1,29 @@
-int helper(int x,vector<int>& nums){
-    if(x<0) return 0;
-    int l=0,curr=0,res=0;
-    for(int i=0;i<nums.size();i++){
-        curr+=nums[i];
-        while(curr>x){
-            curr-=nums[l];
-            l++;
+vector<int> productExceptSelf(vector<int>& nums) {
+        int product=1;
+        int zeroCount=0;
+        for(auto i:nums){
+            if(i==0){
+                zeroCount++;
+                continue;
+            }
+            product*=i;
         }
-        res+=(i-l+1);
+        for(int i=0;i<nums.size();i++){
+            if(nums[i]==0){
+                if(zeroCount-1>0){
+                    nums[i]=0;
+                }
+                else{
+                    nums[i]=product/(nums[i]==0?1:nums[i]);
+                }
+            }
+            else if(zeroCount>0){
+                nums[i]=0;
+            }
+            else{
+                nums[i]=product/(nums[i]==0?1:nums[i]);
+            }
+        }
+        return nums;
+        
     }
-    return res;
-}
-int numSubarraysWithSum(vector<int>& nums, int goal) {
-    return helper(goal,nums)-helper(goal-1,nums);
-}
